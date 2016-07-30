@@ -106,31 +106,36 @@ d3.ganttDiagram = {
                                   .attr('height', this.params.height);
 
     // display the elements based on the provided data
-    chartNode.selectAll('svg')
+    var element = chartNode.selectAll('svg')
              .data(this.params.data).enter()
              .append('g')
-             .append('rect')
-             .attr('fill', function(elem) {
-               if (elem.fillColor)
-                  return elem.fillColor;
-             })
-             .attr('stroke', function(elem) {
-               if (elem.strokeColor)
-                  return elem.strokeColor;
-             })
              .attr('transform', function(elem) {
                return this.elementTranslate(elem);
-             }.bind(this))
-             .attr('y', 0)
-             .attr('height', this.diagramParameters.elementHeight)
-             .attr('width', function(elem) {
-               var xAxisScale = d3.scaleTime()
-                                  .domain([ this.params.startTime, this.params.endTime])
-                                  .range([0, this.params.width])
-                                  .clamp(true);
-
-               return xAxisScale(elem.end) - xAxisScale(elem.start);
              }.bind(this));
+
+
+    element.append('rect')
+           .attr('fill', function(elem) {
+             if (elem.fillColor)
+                return elem.fillColor;
+           })
+           .attr('stroke', function(elem) {
+             if (elem.strokeColor)
+                return elem.strokeColor;
+           })
+           .attr('height', this.diagramParameters.elementHeight)
+           .attr('width', function(elem) {
+             return this.elementWidth(elem);
+           }.bind(this));
+
+    element.append('text')
+           .style('text-anchor', 'middle')
+           .attr('transform', function(elem) {
+             return this.elementLabelTranslate(elem);
+           }.bind(this))
+           .text(function(elem) { // show text within elements
+             return elem.text;
+           });
   },
 
 
@@ -150,7 +155,26 @@ d3.ganttDiagram = {
                        .range([0, this.params.width])
                        .clamp(true);
 
-    return 'translate(' + xTranslate(elem.start) + ', ' + yTranslate(elem.name) + ')';
+    return 'translate(' + xTranslate(elem.start) + ', ' + yTranslate(elem.activity) + ')';
+  },
+
+
+  elementWidth: function(elem) {
+    var xAxisScale = d3.scaleTime()
+                       .domain([ this.params.startTime, this.params.endTime])
+                       .range([0, this.params.width])
+                       .clamp(true);
+
+    return xAxisScale(elem.end) - xAxisScale(elem.start);
+  },
+
+
+  elementLabelTranslate: function(elem) {
+    var yTranslate = d3.scaleBand()
+                       .domain(this.params.activities)
+                       .range([0, this.params.height]);
+
+    return 'translate(' + (this.elementWidth(elem) / 2) + ', ' + (yTranslate.bandwidth() / 2) + ')';
   },
 
 
@@ -171,7 +195,7 @@ d3.ganttDiagram = {
     var xAxis = d3.axisBottom()
                   .scale(xAxisScale)
                   .tickFormat(d3.timeFormat(this.params.xAxis.label.format))
-                  .ticks(10);
+                  .ticks(10);   // @todo config
 
     var xAxisSvg = xAxisNode.append('svg')
                             .attr('width', this.params.width)
@@ -183,6 +207,7 @@ d3.ganttDiagram = {
             .transition()
             .call(xAxis)
             .selectAll('text')
+              .style('text-anchor', 'end')
               .attr('dx', this.params.xAxis.label.dx)
               .attr('dy', this.params.xAxis.label.dy)
               .attr('transform', 'rotate(' + this.params.xAxis.label.rotation + ')');
