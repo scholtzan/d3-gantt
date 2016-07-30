@@ -1,3 +1,7 @@
+/**
+ * Contains utility functions.
+ * @static
+ */
 d3.ganttDiagram.util = {
   /**
    * Merges attributes of two object.
