@@ -16,7 +16,10 @@ d3.ganttDiagram = {
    * @property startTime {date} minimum timestamp (first) displayed on the x axis
    * @property yAxis.width {number} width of the y axis
    * @property xAxis.height {number} height of the x axis
-   * @property xAxis.labelFormat {string} format describing how the dates should be formatted
+   * @property xAxis.label.format {string} format describing how the dates should be formatted
+   * @property xAxis.label.rotation {number} rotation angle of the labels
+   * @property xAxis.label.dx {string} x shift of the labels
+   * @property xAxis.label.dy {string} y shift of the labels
    */
   defaultParameters: {
     node: '#gantt',
@@ -33,9 +36,15 @@ d3.ganttDiagram = {
 
     xAxis: {
       height: 30,
-      labelFormat: '%H:%M'
+      label: {
+        format: '%H:%M',
+        rotation: -90,
+        dx: '-1em',
+        dy: '-1em'
+      }
     }
   },
+
 
   /**
    * Default parameters that cannot be changed by the user.
@@ -161,19 +170,22 @@ d3.ganttDiagram = {
 
     var xAxis = d3.axisBottom()
                   .scale(xAxisScale)
-                  .tickFormat(d3.timeFormat(this.params.xAxis.labelFormat))
+                  .tickFormat(d3.timeFormat(this.params.xAxis.label.format))
                   .ticks(10);
 
     var xAxisSvg = xAxisNode.append('svg')
                             .attr('width', this.params.width)
                             .attr('height', this.params.height + this.params.xAxis.height);
 
-    // @todo: rotation
     xAxisSvg.append('g')
             .attr('class', 'x axis')
             .attr('transform', 'translate(' + (this.params.yAxis.width + 1) + ',' + (this.params.height - 1) + ')')
             .transition()
-            .call(xAxis);
+            .call(xAxis)
+            .selectAll('text')
+              .attr('dx', this.params.xAxis.label.dx)
+              .attr('dy', this.params.xAxis.label.dy)
+              .attr('transform', 'rotate(' + this.params.xAxis.label.rotation + ')');
   },
 
 
