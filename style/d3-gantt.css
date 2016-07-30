@@ -1,0 +1,25 @@
+.gantt-chart {
+  position: relative;
+  width: 100%;
+}
+
+.gantt-chart-y-axis {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.gantt-chart-x-axis {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+.gantt-chart-container {
+  top: 0;
+  left: 65px;
+  width: 100%;
+  position: absolute;
+  overflow-y: scroll;
+}

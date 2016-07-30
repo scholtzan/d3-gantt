@@ -1,0 +1,22 @@
+{
+  "name": "d3-gantt",
+  "version": "0.0.1",
+  "description": "Gantt Diagram",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Anna Scholtz <anna@scholtzan.net>",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-copy": "^0.8.0",
+    "grunt-jsdoc": "^2.1.0",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-concat": "^0.5.1"
+  }
+}
