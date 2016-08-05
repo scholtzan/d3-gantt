@@ -35,7 +35,8 @@ d3.ganttDiagram = {
     },
 
     xAxis: {
-      height: 30,
+      height: 35,
+      interval: d3.timeMinute.every(15),
       label: {
         format: '%H:%M',
         rotation: -90,
@@ -208,7 +209,7 @@ d3.ganttDiagram = {
     var xAxis = d3.axisBottom()
                   .scale(xAxisScale)
                   .tickFormat(d3.timeFormat(this.params.xAxis.label.format))
-                  .ticks(10);   // @todo config
+                  .ticks(this.params.xAxis.interval);
 
     var xAxisSvg = xAxisNode.append('svg')
                             .attr('width', this.params.width)
@@ -255,9 +256,13 @@ d3.ganttDiagram = {
   },
 
 
+  /**
+   * Creates the tooltips for the y axis to show the activity descriptions.
+   */
   initTooltips: function() {
     var activities = this.params.activities;
 
+    // create one div that will be the tooltip
     var tooltip = d3.select(this.params.node)
                   	.append('div')
                     .attr('class', 'y-axis-tooltip')
@@ -265,12 +270,18 @@ d3.ganttDiagram = {
                   	.style('z-index', '10')
                   	.style('visibility', 'hidden');
 
+    // when hovering over a y axis label, show the div and move to the correct position and update the displayed description
     d3.selectAll('.y .tick')
-      .on('mouseover', function(){ return tooltip.style('visibility', 'visible'); })
+      .on('mouseover', function(){
+        return tooltip.style('visibility', 'visible');
+      })
       .on('mousemove', function(d){
         return tooltip.style('top', event.pageY + 10 + 'px').style('left', event.pageX + 10 + 'px')
-                      .text(activities.find(function(x) { return x.name == d; }).description); })
-	    .on('mouseout', function(){ return tooltip.style('visibility', 'hidden'); });
+                      .text(activities.find(function(x) { return x.name == d; }).description);
+      })
+	    .on('mouseout', function(){
+        return tooltip.style('visibility', 'hidden');
+      });
   }
 };
 

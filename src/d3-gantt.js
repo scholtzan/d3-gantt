@@ -35,7 +35,8 @@ d3.ganttDiagram = {
     },
 
     xAxis: {
-      height: 30,
+      height: 35,
+      interval: d3.timeMinute.every(15),
       label: {
         format: '%H:%M',
         rotation: -90,
@@ -208,7 +209,7 @@ d3.ganttDiagram = {
     var xAxis = d3.axisBottom()
                   .scale(xAxisScale)
                   .tickFormat(d3.timeFormat(this.params.xAxis.label.format))
-                  .ticks(10);   // @todo config
+                  .ticks(this.params.xAxis.interval);
 
     var xAxisSvg = xAxisNode.append('svg')
                             .attr('width', this.params.width)
