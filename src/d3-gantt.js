@@ -90,6 +90,7 @@ d3.ganttDiagram = {
   draw: function() {
     this.drawXAxis();
     this.drawYAxis();
+    this.initTooltips();
 
     // create a separate container in order to enable scrolling on overflow with fixed axes
     var chartContainer = d3.select(this.params.node)
@@ -147,7 +148,7 @@ d3.ganttDiagram = {
    */
   elementTranslate: function(elem) {
     var yTranslate = d3.scaleBand()
-                       .domain(this.params.activities)
+                       .domain(this.params.activities.map(function(x) { return x.name; }))
                        .range([0, this.params.height]);
 
     var xTranslate = d3.scaleTime()
@@ -159,6 +160,12 @@ d3.ganttDiagram = {
   },
 
 
+  /**
+   * Calculates the width of an element based on the start and end time.
+   *
+   * @param elem {object} element data
+   * @return {number} width of the element
+   */
   elementWidth: function(elem) {
     var xAxisScale = d3.scaleTime()
                        .domain([ this.params.startTime, this.params.endTime])
@@ -169,9 +176,15 @@ d3.ganttDiagram = {
   },
 
 
+  /**
+   * Calculates the x and y offset of the label within a specific element.
+   *
+   * @param elem {object} element the label belongs to
+   * @return {string} 'translate([x], [y])'
+   */
   elementLabelTranslate: function(elem) {
     var yTranslate = d3.scaleBand()
-                       .domain(this.params.activities)
+                       .domain(this.params.activities.map(function(x) { return x.name; }))
                        .range([0, this.params.height]);
 
     return 'translate(' + (this.elementWidth(elem) / 2) + ', ' + (yTranslate.bandwidth() / 2) + ')';
@@ -224,7 +237,7 @@ d3.ganttDiagram = {
                       .attr('class', 'gantt-chart-y-axis');
 
     var yAxisScale = d3.scaleBand()
-                       .domain(this.params.activities)
+                       .domain(this.params.activities.map(function(x) { return x.name; }))
                        .range([0, this.params.height]);
 
     var yAxisSvg = yAxisNode.append('svg')
@@ -239,5 +252,34 @@ d3.ganttDiagram = {
             .attr('class', 'y axis')
             .attr('transform', 'translate(' + (this.params.yAxis.width - 1) + ', 0)')
             .call(yAxis);
+  },
+
+
+  /**
+   * Creates the tooltips for the y axis to show the activity descriptions.
+   */
+  initTooltips: function() {
+    var activities = this.params.activities;
+
+    // create one div that will be the tooltip
+    var tooltip = d3.select(this.params.node)
+                  	.append('div')
+                    .attr('class', 'y-axis-tooltip')
+                  	.style('position', 'absolute')
+                  	.style('z-index', '10')
+                  	.style('visibility', 'hidden');
+
+    // when hovering over a y axis label, show the div and move to the correct position and update the displayed description
+    d3.selectAll('.y .tick')
+      .on('mouseover', function(){
+        return tooltip.style('visibility', 'visible');
+      })
+      .on('mousemove', function(d){
+        return tooltip.style('top', event.pageY + 10 + 'px').style('left', event.pageX + 10 + 'px')
+                      .text(activities.find(function(x) { return x.name == d; }).description);
+      })
+	    .on('mouseout', function(){
+        return tooltip.style('visibility', 'hidden');
+      });
   }
 };

@@ -23,3 +23,11 @@
   position: absolute;
   overflow-y: scroll;
 }
+
+.y-axis-tooltip {
+  background-color: rgba(50, 50, 50, 0.5);
+  color: white;
+  font-family: sans-serif;
+  padding: 4px;
+  font-size: 75%;
+}
