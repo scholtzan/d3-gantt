@@ -66,7 +66,7 @@ d3.ganttDiagram = {
    */
   init: function(params) {
     // get and store the user defined parameters
-    this.params = d3.ganttDiagram.util.extend(this.defaultParameters, params);
+    this.params = $.extend(true, this.defaultParameters, params);
 
     // determine the time domain
     if (this.params.data.length > 0) {
