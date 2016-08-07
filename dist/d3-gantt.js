@@ -31,12 +31,16 @@ d3.ganttDiagram = {
     startTime: new Date(),
 
     yAxis: {
-      width: 15
+      width: 15,
+      elementHeight: 250,
+      dynamicHeight: true
     },
 
     xAxis: {
       height: 35,
+      dynamicWidth: true,
       interval: d3.timeMinute.every(15),
+      tickDistance: 50,
       label: {
         format: '%H:%M',
         rotation: -90,
@@ -44,16 +48,6 @@ d3.ganttDiagram = {
         dy: '-1em'
       }
     }
-  },
-
-
-  /**
-   * Default parameters that cannot be changed by the user.
-   *
-   * @property elementHeight {number} height of all elements
-   */
-  diagramParameters: {
-    elementHeight: 10
   },
 
 
@@ -89,6 +83,17 @@ d3.ganttDiagram = {
    * Displays axes and elements.
    */
   draw: function() {
+    // re-calculate the height of the diagram if explicit height of elements should be used
+    if (this.params.yAxis.dynamicHeight) {
+      this.params.height = this.params.yAxis.elementHeight * this.params.activities.length;
+    }
+
+    // re-calculate the width of the diagram if explicit distance between ticks should be used
+    if (this.params.xAxis.dynamicWidth) {
+      var numberOfTicks = this.params.xAxis.interval.range(this.params.startTime, this.params.endTime).length;
+      this.params.width = this.params.xAxis.tickDistance * numberOfTicks;
+    }
+
     this.drawXAxis();
     this.drawYAxis();
     this.initTooltips();
@@ -125,7 +130,7 @@ d3.ganttDiagram = {
              if (elem.strokeColor)
                 return elem.strokeColor;
            })
-           .attr('height', this.diagramParameters.elementHeight)
+           .attr('height', this.params.yAxis.elementHeight)
            .attr('width', function(elem) {
              return this.elementWidth(elem);
            }.bind(this));
@@ -196,10 +201,20 @@ d3.ganttDiagram = {
    * Displays the x axis.
    */
   drawXAxis: function() {
+    var diagramNode = this.params.node;
+
     // creating a separate container allows to leave the x axis fixed
     var xAxisNode = d3.select(this.params.node)
                       .append('div')
                       .attr('class', 'gantt-chart-x-axis');
+
+    // @todo extra function
+    var xAxisElement = $(this.params.node).find('.gantt-chart-x-axis');
+
+    xAxisElement.scroll(function(e) {
+      var ganttContainter = $(diagramNode).find('.gantt-chart-container');
+      ganttContainter.scrollLeft(xAxisElement.scrollLeft());
+    });
 
     var xAxisScale = d3.scaleTime()
                        .domain([ this.params.startTime, this.params.endTime])
@@ -237,6 +252,16 @@ d3.ganttDiagram = {
                       .append('div')
                       .attr('class', 'gantt-chart-y-axis');
 
+    // @todo extra function
+    var diagramNode = this.params.node;
+
+    var yAxisElement = $(this.params.node).find('.gantt-chart-y-axis');
+
+    yAxisElement.scroll(function(e) {
+      var ganttContainter = $(diagramNode).find('.gantt-chart-container');
+      ganttContainter.scrollTop(xAxisElement.scrollTop());
+    });
+
     var yAxisScale = d3.scaleBand()
                        .domain(this.params.activities.map(function(x) { return x.name; }))
                        .range([0, this.params.height]);
@@ -247,7 +272,7 @@ d3.ganttDiagram = {
 
     var yAxis = d3.axisLeft().scale(yAxisScale).tickSize(0);
 
-    this.diagramParameters.elementHeight = yAxisScale.bandwidth();
+    this.params.yAxis.elementHeight = yAxisScale.bandwidth();
 
     yAxisSvg.append('g')
             .attr('class', 'y axis')
@@ -282,32 +307,5 @@ d3.ganttDiagram = {
 	    .on('mouseout', function(){
         return tooltip.style('visibility', 'hidden');
       });
-  }
-};
-
-/**
- * Contains utility functions.
- * @static
- */
-d3.ganttDiagram.util = {
-  /**
-   * Merges attributes of two object.
-   * In case of duplicates, the attribute values of the second object will be chosen.
-   *
-   * @param {object} obj1 - first object
-   * @param {object} obj2 - second object
-   */
-  extend: function(obj1, obj2) {
-    var result = {};
-
-    for (var a1 in obj1) {
-      result[a1] = obj1[a1];
-    }
-
-    for (var a2 in obj2) {
-      result[a2] = obj2[a2];
-    }
-
-    return result;
   }
 };
