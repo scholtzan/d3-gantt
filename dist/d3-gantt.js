@@ -301,7 +301,7 @@ d3.ganttDiagram = {
         return tooltip.style('visibility', 'visible');
       })
       .on('mousemove', function(d){
-        return tooltip.style('top', event.pageY + 10 + 'px').style('left', event.pageX + 10 + 'px')
+        return tooltip.style('top', d3.mouse(document.body)[1] + 10 + 'px').style('left', d3.mouse(document.body)[0] + 10 + 'px')
                       .text(activities.find(function(x) { return x.name == d; }).description);
       })
 	    .on('mouseout', function(){
