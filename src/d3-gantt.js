@@ -1,21 +1,30 @@
 /**
- * Contains functionality and configuration parameters for drawing Gantt diagrams.
+ * Contains functionality and configuration parameters for drawing gantt charts.
  *
- * @class d3.ganttDiagram
+ * @class d3.ganttChart
  */
-d3.ganttDiagram = {
+d3.ganttChart = {
   /**
    * Default parameters that can be overwritten by the user.
    *
-   * @property node {string} id of the element the gantt diagram will be bound to
-   * @property width {number} diagram width
-   * @property height {number} diagram height
+   * @property node {string} ID of the element the gantt chart will be bound to
+   * @property width {number} chart width
+   * @property height {number} chart height
    * @property activities {array} activties that will be displayed on the y axis
    * @property data {array} data points
    * @property endTime {date} maximum timestamp displayed on the x axis
    * @property startTime {date} minimum timestamp (first) displayed on the x axis
    * @property yAxis.width {number} width of the y axis
+   * @property yAxis.dynamicHeight {boolean} false if `height` is used as the chart height;
+                                             true if elements should have a specific height and the chart height should be calculated accordingly
+                                             (in this case property `height` is ignored)
+   * @property yAxis.elementHeight {number} height of the elements if `yAxis.dynamicHeight` is true
    * @property xAxis.height {number} height of the x axis
+   * @property xAxis.dynamicWidth {number} false if `width` is used as the chart width;
+                                           true if ticks on the x axis should have a specific distance
+                                           (in this case `width` is ignored)
+   * @property xAxis.tickDistance {number} distance between two ticks if `dynamicWidth` is true
+   * @property xAxis.interval {function} d3 interval function that determines the time interval on the x axis
    * @property xAxis.label.format {string} format describing how the dates should be formatted
    * @property xAxis.label.rotation {number} rotation angle of the labels
    * @property xAxis.label.dx {string} x shift of the labels
@@ -32,15 +41,15 @@ d3.ganttDiagram = {
 
     yAxis: {
       width: 15,
-      elementHeight: 250,
-      dynamicHeight: true
+      dynamicHeight: true,
+      elementHeight: 50
     },
 
     xAxis: {
       height: 35,
       dynamicWidth: true,
-      interval: d3.timeMinute.every(15),
       tickDistance: 50,
+      interval: d3.timeMinute.every(15),
       label: {
         format: '%H:%M',
         rotation: -90,
@@ -52,7 +61,7 @@ d3.ganttDiagram = {
 
 
   /**
-   * Initializes the gantt diagram.
+   * Initializes the gantt chart.
    *
    * Determines the time domain and sets configuration parameters.
    *
@@ -208,7 +217,7 @@ d3.ganttDiagram = {
                       .append('div')
                       .attr('class', 'gantt-chart-x-axis');
 
-    // @todo extra function
+    // @todo extra function/improve scroll handling with fixed axis
     var xAxisElement = $(this.params.node).find('.gantt-chart-x-axis');
 
     xAxisElement.scroll(function(e) {

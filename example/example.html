@@ -13,21 +13,29 @@
         <div id="gantt-chart"></div>
 
         <script>
-            var gantt = Object.create(d3.ganttDiagram);
+            var gantt = Object.create(d3.ganttChart);
+
             gantt.init({
               node: '#gantt-chart',
-              activities: [{name: 'A', description: 'abcdasf asdfsf asdf uyrru uy uytyu tyut uytyut ytyut yutyutyu '},
-                           {name: 'B'},
-                           {name: 'C', description: ''}],
+              activities: [{name: 'John', description: "John's schedule"},
+                           {name: 'Bob'},
+                           {name: 'Jane', description: "Jane's schedule"}],
               data: [
-                { activity: 'A', text: '12', fillColor: 'rgb(150, 150, 150)', strokeColor: 'rgb(50, 50, 50)', start: new Date('2016-06-06 11:11:11'), end: new Date('2016-06-06 12:00:00') },
-                { activity: 'B', text: '1234', start: new Date('2016-06-06 10:00:00'), end: new Date('2016-06-06 10:30:00')}
+                { activity: 'John', text: 'Work', fillColor: 'rgb(200, 200, 200)', start: new Date('2016-06-06 07:00:00'), end: new Date('2016-06-06 15:00:00') },
+                { activity: 'Jane', text: 'Work', fillColor: 'rgb(200, 100, 100)', start: new Date('2016-06-06 09:00:00'), end: new Date('2016-06-06 17:30:00') },
+                { activity: 'Bob', text: 'School', fillColor: 'rgb(200, 200, 100)', start: new Date('2016-06-06 08:00:00'), end: new Date('2016-06-06 14:30:00') },
+                { activity: 'Bob', text: 'Soccer', fillColor: 'rgb(200, 200, 100)', start: new Date('2016-06-06 15:00:00'), end: new Date('2016-06-06 16:30:00') }
               ],
 
               xAxis: {
-                interval: d3.timeMinute.every(10)
+                interval: d3.timeHour.every(1)
+              },
+
+              yAxis: {
+                width: 50
               }
             })
+
             gantt.draw();
         </script>
     </body>
