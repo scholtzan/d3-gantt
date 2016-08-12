@@ -7,6 +7,7 @@ Some features include:
 * Coloring and styling of individual elements
 * Frozen Y-axis when scrolling within the chart
 * Y-axis tooltips
+* RequireJS compatibility
 
 
 ## Usage
