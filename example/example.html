@@ -8,9 +8,17 @@
         <script src="../dist/d3-gantt.js"></script>
         <link href="../dist/d3-gantt.css" rel="stylesheet">
 
+        <style>
+          text {
+            font-family: sans-serif;
+            font-size: 10pt;
+          }
+        </style>
     </head>
 
     <body>
+        <h1>Example1</h1>
+
         <div id="gantt-chart"></div>
 
         <script>
@@ -20,16 +28,49 @@
               node: '#gantt-chart',
               activities: [{name: 'John', description: "John's schedule"},
                            {name: 'Bob'},
+                           {name: 'Claire', description: "Claire's plan for today"},
                            {name: 'Jane', description: "Jane's schedule"}],
               data: [
-                { activity: 'John', text: 'Work', fillColor: 'rgb(200, 200, 200)', start: new Date('2016-06-06 07:00:00'), end: new Date('2016-06-06 15:00:00') },
-                { activity: 'Jane', text: 'Work', fillColor: 'rgb(200, 100, 100)', start: new Date('2016-06-06 09:00:00'), end: new Date('2016-06-06 17:30:00') },
-                { activity: 'Bob', text: 'School', fillColor: 'rgb(200, 200, 100)', start: new Date('2016-06-06 08:00:00'), end: new Date('2016-06-06 14:30:00') },
-                { activity: 'Bob', text: 'Soccer', fillColor: 'rgb(200, 200, 100)', start: new Date('2016-06-06 15:00:00'), end: new Date('2016-06-06 16:30:00') }
+                {
+                  activity: 'John',
+                  text: 'Work',
+                  fillColor: 'rgb(160, 200, 255)',
+                  strokeColor: 'rgb(0, 160, 255)',
+                  start: new Date('2016-06-06 07:00:00'),
+                  end: new Date('2016-06-06 15:00:00')
+                },
+                {
+                  activity: 'Jane',
+                  text: 'Work',
+                  fillColor: 'rgb(255, 200, 160)',
+                  strokeColor: 'rgb(255, 160, 0)',
+                  start: new Date('2016-06-06 09:00:00'),
+                  end: new Date('2016-06-06 17:30:00')
+                },
+                {
+                  activity: 'Bob',
+                  text: 'School',
+                  fillColor: 'rgb(200, 160, 255)',
+                  strokeColor: 'rgb(160, 0, 255)',
+                  start: new Date('2016-06-06 08:00:00'),
+                  end: new Date('2016-06-06 14:30:00')
+                },
+                {
+                  activity: 'Bob',
+                  text: 'Soccer',
+                  strokeColor: 'rgb(160, 0, 255)',
+                  fillColor: 'rgb(200, 160, 255)',
+                  start: new Date('2016-06-06 15:00:00'),
+                  end: new Date('2016-06-06 16:30:00')
+                }
               ],
 
               xAxis: {
-                interval: d3.timeHour.every(1)
+                interval: d3.timeHour.every(1),
+                height: 50,
+                label: {
+                  dy: '-0.5em'
+                }
               },
 
               yAxis: {

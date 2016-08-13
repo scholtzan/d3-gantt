@@ -64,7 +64,7 @@ module.exports = function(grunt) {
 
   //=== register grunt tasks ==================================================
 
-  grunt.registerTask("dev", [
+  grunt.registerTask("default", [
     "jshint",
     "concat",
     "copy",

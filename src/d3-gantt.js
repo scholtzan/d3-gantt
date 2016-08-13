@@ -123,6 +123,7 @@
 
       // create a separate container in order to enable scrolling on overflow with fixed axes
       var chartContainer = d3.select(this.params.node)
+                             .attr('class', 'gantt-chart')  
                              .append('div')
                              .attr('class', 'gantt-chart-container')
                              .attr('height', this.params.height)
