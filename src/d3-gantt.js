@@ -123,7 +123,7 @@
 
       // create a separate container in order to enable scrolling on overflow with fixed axes
       var chartContainer = d3.select(this.params.node)
-                             .attr('class', 'gantt-chart')  
+                             .attr('class', 'gantt-chart')
                              .append('div')
                              .attr('class', 'gantt-chart-container')
                              .attr('height', this.params.height)
@@ -306,6 +306,7 @@
      */
     initTooltips: function() {
       var activities = this.params.activities;
+      var node = $(this.params.node)[0];
 
       // create one div that will be the tooltip
       var tooltip = d3.select(this.params.node)
@@ -321,7 +322,7 @@
           return tooltip.style('visibility', 'visible');
         })
         .on('mousemove', function(d){
-          return tooltip.style('top', d3.mouse(document.body)[1] + 10 + 'px').style('left', d3.mouse(document.body)[0] + 10 + 'px')
+          return tooltip.style('top', d3.mouse(node)[1] + 10 + 'px').style('left', d3.mouse(node)[0] + 10 + 'px')
                         .text(activities.find(function(x) { return x.name == d; }).description);
         })
   	    .on('mouseout', function(){

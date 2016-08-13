@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Gantt Example 2</title>
+        <script src="../lib/d3/d3.min.js"></script>
+        <script src="../lib/jquery-3.1.0.min.js"></script>
+        <script src="../dist/d3-gantt.js"></script>
+        <link href="../dist/d3-gantt.css" rel="stylesheet">
+
+        <style>
+          text {
+            font-family: sans-serif;
+            font-size: 9pt;
+          }
+        </style>
+    </head>
+
+    <body>
+
+        <div id="gantt-chart"></div>
+
+        <script>
+            var gantt = Object.create(d3.ganttChart);
+
+            gantt.init({
+              node: '#gantt-chart',
+              activities: [{name: 'Task 1', description: "Collecting all requirements"},
+                           {name: 'Task 2', description: "Planning the architecture"},
+                           {name: 'Task 3'},
+                           {name: 'Task 4'},
+                           {name: 'Task 5'}],
+              data: [
+                {
+                  activity: 'Task 1',
+                  fillColor: 'rgb(160, 200, 255)',
+                  strokeColor: 'rgb(0, 160, 255)',
+                  start: new Date('2016-06-06 00:00:00'),
+                  end: new Date('2016-06-08 00:00:00')
+                },
+                {
+                  activity: 'Task 2',
+                  fillColor: 'rgb(160, 200, 255)',
+                  strokeColor: 'rgb(0, 160, 255)',
+                  start: new Date('2016-06-09 00:00:00'),
+                  end: new Date('2016-06-15 00:00:00')
+                },
+                {
+                  activity: 'Task 3',
+                  text: "Test on at least 20 subjects",
+                  fillColor: 'rgb(160, 200, 255)',
+                  strokeColor: 'rgb(0, 160, 255)',
+                  start: new Date('2016-06-15 00:00:00'),
+                  end: new Date('2016-06-23 00:00:00')
+                },
+                {
+                  activity: 'Task 4',
+                  fillColor: 'rgb(160, 200, 255)',
+                  strokeColor: 'rgb(0, 160, 255)',
+                  start: new Date('2016-06-25 00:00:00'),
+                  end: new Date('2016-06-27 00:00:00')
+                },
+                {
+                  activity: 'Task 5',
+                  fillColor: 'rgb(160, 200, 255)',
+                  strokeColor: 'rgb(0, 160, 255)',
+                  start: new Date('2016-06-28 00:00:00'),
+                  end: new Date('2016-07-04 00:00:00')
+                },
+                {
+                  activity: 'Task 5',
+                  text: 'Optional',
+                  fillColor: 'rgb(160, 160, 160)',
+                  strokeColor: 'rgb(100, 100, 100)',
+                  start: new Date('2016-07-03 00:00:00'),
+                  end: new Date('2016-07-07 00:00:00')
+                },
+              ],
+
+              xAxis: {
+                interval: d3.timeDay.every(1),
+                height: 80,
+                label: {
+                  format: '%Y-%m-%d',
+                  dy: '-0.5em'
+                }
+              },
+
+              yAxis: {
+                width: 50
+              }
+            })
+
+            gantt.draw();
+        </script>
+    </body>
+</html>
