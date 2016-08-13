@@ -123,11 +123,11 @@
 
       // create a separate container in order to enable scrolling on overflow with fixed axes
       var chartContainer = d3.select(this.params.node)
-                        .append('div')
-                        .attr('class', 'gantt-chart-container')
-                        .attr('height', this.params.height)
-                        .attr('width', this.params.width)
-                        .attr('style', 'left: ' + this.params.yAxis.width + 'px');
+                             .append('div')
+                             .attr('class', 'gantt-chart-container')
+                             .attr('height', this.params.height)
+                             .attr('width', this.params.width)
+                             .attr('style', 'left: ' + this.params.yAxis.width + 'px');
 
       var chartNode = chartContainer.append('svg')
                                     .attr('preserveAspectRatio', 'xMinYMin meet')
@@ -137,12 +137,11 @@
 
       // display the elements based on the provided data
       var element = chartNode.selectAll('svg')
-               .data(this.params.data).enter()
-               .append('g')
-               .attr('transform', function(elem) {
-                 return this.elementTranslate(elem);
-               }.bind(this));
-
+                             .data(this.params.data).enter()
+                             .append('g')
+                             .attr('transform', function(elem) {
+                               return this.elementTranslate(elem);
+                             }.bind(this));
 
       element.append('rect')
              .attr('fill', function(elem) {
@@ -176,16 +175,30 @@
      * @return {string} 'translate([x], [y])'
      */
     elementTranslate: function(elem) {
-      var yTranslate = d3.scaleBand()
-                         .domain(this.params.activities.map(function(x) { return x.name; }))
-                         .range([0, this.params.height]);
+      return 'translate(' + this.xAxisScale()(elem.start) + ', ' + this.yAxisScale()(elem.activity) + ')';
+    },
 
-      var xTranslate = d3.scaleTime()
-                         .domain([ this.params.startTime, this.params.endTime])
-                         .range([0, this.params.width])
-                         .clamp(true);
 
-      return 'translate(' + xTranslate(elem.start) + ', ' + yTranslate(elem.activity) + ')';
+    /**
+     * Returns the time scale of the x axis.
+     * @return {object} d3.scaleTime
+     */
+    xAxisScale: function() {
+      return d3.scaleTime()
+               .domain([ this.params.startTime, this.params.endTime])
+               .range([0, this.params.width])
+               .clamp(true);
+    },
+
+
+    /**
+     * Returns the scale of activities represented by the y axis.
+     * @return {object} d3.scaleBand
+     */
+    yAxisScale: function() {
+      return d3.scaleBand()
+               .domain(this.params.activities.map(function(x) { return x.name; }))
+               .range([0, this.params.height]);
     },
 
 
@@ -196,12 +209,7 @@
      * @return {number} width of the element
      */
     elementWidth: function(elem) {
-      var xAxisScale = d3.scaleTime()
-                         .domain([ this.params.startTime, this.params.endTime])
-                         .range([0, this.params.width])
-                         .clamp(true);
-
-      return xAxisScale(elem.end) - xAxisScale(elem.start);
+      return this.xAxisScale()(elem.end) - this.xAxisScale()(elem.start);
     },
 
 
@@ -212,11 +220,7 @@
      * @return {string} 'translate([x], [y])'
      */
     elementLabelTranslate: function(elem) {
-      var yTranslate = d3.scaleBand()
-                         .domain(this.params.activities.map(function(x) { return x.name; }))
-                         .range([0, this.params.height]);
-
-      return 'translate(' + (this.elementWidth(elem) / 2) + ', ' + (yTranslate.bandwidth() / 2) + ')';
+      return 'translate(' + (this.elementWidth(elem) / 2) + ', ' + (this.yAxisScale().bandwidth() / 2) + ')';
     },
 
 
@@ -231,7 +235,7 @@
                         .append('div')
                         .attr('class', 'gantt-chart-x-axis');
 
-      // @todo extra function/improve scroll handling with fixed axis
+      // scroll handling with fixed axis
       var xAxisElement = $(this.params.node).find('.gantt-chart-x-axis');
 
       xAxisElement.scroll(function(e) {
@@ -239,23 +243,19 @@
         ganttContainter.scrollLeft(xAxisElement.scrollLeft());
       });
 
-      var xAxisScale = d3.scaleTime()
-                         .domain([ this.params.startTime, this.params.endTime])
-                         .range([0, this.params.width])
-                         .clamp(true);
-
+      // show x axis
       var xAxis = d3.axisBottom()
-                    .scale(xAxisScale)
+                    .scale(this.xAxisScale())
                     .tickFormat(d3.timeFormat(this.params.xAxis.label.format))
                     .ticks(this.params.xAxis.interval);
 
       var xAxisSvg = xAxisNode.append('svg')
-                              .attr('width', this.params.width)
+                              .attr('width', this.params.width + this.params.yAxis.width)
                               .attr('height', this.params.height + this.params.xAxis.height);
 
       xAxisSvg.append('g')
               .attr('class', 'x axis')
-              .attr('transform', 'translate(' + (this.params.yAxis.width + 1) + ',' + (this.params.height - 1) + ')')
+              .attr('transform', 'translate(' + this.params.yAxis.width + ',' + this.params.height + ')')
               .transition()
               .call(xAxis)
               .selectAll('text')
@@ -275,9 +275,8 @@
                         .append('div')
                         .attr('class', 'gantt-chart-y-axis');
 
-      // @todo extra function
+      // handle horizontal scrolling
       var diagramNode = this.params.node;
-
       var yAxisElement = $(this.params.node).find('.gantt-chart-y-axis');
 
       yAxisElement.scroll(function(e) {
@@ -285,17 +284,14 @@
         ganttContainter.scrollTop(xAxisElement.scrollTop());
       });
 
-      var yAxisScale = d3.scaleBand()
-                         .domain(this.params.activities.map(function(x) { return x.name; }))
-                         .range([0, this.params.height]);
-
+      // show y axis
       var yAxisSvg = yAxisNode.append('svg')
                               .attr('width', this.params.yAxis.width)
                               .attr('height', this.params.height);
 
-      var yAxis = d3.axisLeft().scale(yAxisScale).tickSize(0);
+      var yAxis = d3.axisLeft().scale(this.yAxisScale()).tickSize(0);
 
-      this.params.yAxis.elementHeight = yAxisScale.bandwidth();
+      this.params.yAxis.elementHeight = this.yAxisScale().bandwidth();
 
       yAxisSvg.append('g')
               .attr('class', 'y axis')
