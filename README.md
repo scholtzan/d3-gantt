@@ -2,12 +2,16 @@
 
 Gantt chart implementation with D3.
 
+![Gantt chart screenshot](https://github.com/scholtzan/d3-gantt/raw/master/example/example1.png)
+
 Some features include:
 * Explicit or dynamic width and height of chart
 * Coloring and styling of individual elements
 * Frozen Y-axis when scrolling within the chart
 * Y-axis tooltips
 * RequireJS compatibility
+
+![Gantt chart screenshot2](https://github.com/scholtzan/d3-gantt/raw/master/example/example2.gif)
 
 
 ## Usage
@@ -28,10 +32,21 @@ gantt.init({
 
   // data to describe the elements             
   data: [
-    { activity: 'John', text: 'Work', fillColor: 'rgb(200, 200, 200)', start: new Date('2016-06-06 07:00:00'), end: new Date('2016-06-06 15:00:00') },
-    { activity: 'Jane', text: 'Work', fillColor: 'rgb(200, 100, 100)', start: new Date('2016-06-06 09:00:00'), end: new Date('2016-06-06 17:30:00') },
-    { activity: 'Bob', text: 'School', fillColor: 'rgb(200, 200, 100)', start: new Date('2016-06-06 08:00:00'), end: new Date('2016-06-06 14:30:00') },
-    { activity: 'Bob', text: 'Soccer', fillColor: 'rgb(200, 200, 100)', start: new Date('2016-06-06 15:00:00'), end: new Date('2016-06-06 16:30:00') }
+    {
+      activity: 'John',
+      text: 'Work',
+      fillColor: 'rgb(200, 200, 200)',
+      start: new Date('2016-06-06 07:00:00'),
+      end: new Date('2016-06-06 15:00:00')
+    },
+    {
+      activity: 'Jane',
+      text: 'Work',
+      fillColor: 'rgb(200, 100, 100)',
+      start: new Date('2016-06-06 09:00:00'),
+      end: new Date('2016-06-06 17:30:00')
+    },
+    { ... }
   ],
 
   xAxis: {
