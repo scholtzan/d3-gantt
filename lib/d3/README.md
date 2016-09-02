@@ -32,4 +32,4 @@ You can also use the standalone D3 microlibraries. For example, [d3-selection](h
 <script src="https://d3js.org/d3-selection.v1.js"></script>
 ```
 
-If you prefer to pin to a specific release, try [CDNJS](https://cdnjs.com/libraries/d3) or [npmcdn](https://npmcdn.com/d3/).
+If you prefer to pin to a specific release, try [CDNJS](https://cdnjs.com/libraries/d3) or [unpkg](https://unpkg.com/d3/).
