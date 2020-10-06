@@ -321,8 +321,8 @@
         .on('mouseover', function(){
           return tooltip.style('visibility', 'visible');
         })
-        .on('mousemove', function(d){
-          return tooltip.style('top', d3.mouse(node)[1] + 10 + 'px').style('left', d3.mouse(node)[0] + 10 + 'px')
+        .on('mousemove', function(event, d){
+          return tooltip.style('top', d3.pointer(node)[1] + 10 + 'px').style('left', d3.pointer(node)[0] + 10 + 'px')
                         .text(activities.find(function(x) { return x.name == d; }).description);
         })
   	    .on('mouseout', function(){

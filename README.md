@@ -64,7 +64,7 @@ gantt.draw();
 
 ## Dependencies
 
-* [D3 (Version 4)](https://d3js.org/)
+* [D3 (Version 6)](https://d3js.org/)
 * [jQuery](https://jquery.com/)
 
 
